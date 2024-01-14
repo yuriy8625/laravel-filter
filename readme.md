@@ -60,9 +60,9 @@ class UserFilter extends \JTI\LaravelFilter\LaravelFilter
     }
 
     // function name equal key name from array of params
-    public function email($name = '')
+    public function email($email = '')
     {
-        if ($name) {
+        if ($email) {
             $this->builder->where('email', '=', $name);
         }
     }
