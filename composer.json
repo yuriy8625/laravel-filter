@@ -1,0 +1,41 @@
+{
+    "name": "jti/laravelfilter",
+    "description": "Filter scope for Laravel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yuriy Kernytskyi",
+            "email": "yuriy.kernytskyi@jointoit.com",
+            "homepage": "http://author.com"
+        }
+    ],
+    "homepage": "https://github.com/jti/laravelfilter",
+    "keywords": ["Laravel", "LaravelFilter"],
+    "require": {
+        "illuminate/support": "~9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "JTI\\LaravelFilter\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "JTI\\LaravelFilter\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JTI\\LaravelFilter\\LaravelFilterServiceProvider"
+            ],
+            "aliases": {
+                "LaravelFilter": "JTI\\LaravelFilter\\Facades\\LaravelFilter"
+            }
+        }
+    }
+}
