@@ -17,41 +17,76 @@ composer require jti/laravelfilter
 
 ## Usage
 
-## Change log
 
-Please see the [changelog](changelog.md) for more information on what has changed recently.
+1. Use trait with scope in your Model
 
-## Testing
+```php
+<?php
 
-```bash
-composer test
+namespace App\Models;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    use Filterable;
+}
+
+
+trait Filterable
+{
+    /**
+     * @param Builder $builder
+     * @param LaravelFilter $filter
+     */
+    public function scopeFilter(Builder $builder, LaravelFilter $filter): void
+    {
+        $filter->apply($builder);
+    }
+}
+
 ```
 
-## Contributing
+2. Create your Filter class
 
-Please see [contributing.md](contributing.md) for details and a todolist.
+```php
+class UserFilter extends \JTI\LaravelFilter\LaravelFilter
+{
 
-## Security
+    protected function initBuilder(\Illuminate\Database\Eloquent\Builder $builder): \Illuminate\Database\Eloquent\Builder
+    {
+        return $this->builder = $builder; // your model builder
+    }
 
-If you discover any security related issues, please email yuriy.kernytskyi@jointoit.com instead of using the issue tracker.
+    // function name equal key name from array of params
+    public function email($name = '')
+    {
+        if ($name) {
+            $this->builder->where('email', '=', $name);
+        }
+    }
+}
+}
+```
 
-## Credits
+3. Use filter in controller for example
 
-- [Yuriy Kernytskyi][link-author]
-- [All Contributors][link-contributors]
+```php
 
-## License
+class BuilderController extends Controller
+{
+    public function index()
+    {
+        $filter = new UserFilter(['email' => 'example@gmail.com']);
+        $users = \App\Models\User::query()->filter($filter)->get();
+        
+        return view('users', compact('users'));
+    }
 
-MIT. Please see the [license file](license.md) for more information.
+}
 
-[ico-version]: https://img.shields.io/packagist/v/jti/laravelfilter.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/jti/laravelfilter.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/jti/laravelfilter/master.svg?style=flat-square
-[ico-styleci]: https://styleci.io/repos/12345678/shield
+```
 
-[link-packagist]: https://packagist.org/packages/jti/laravelfilter
-[link-downloads]: https://packagist.org/packages/jti/laravelfilter
-[link-travis]: https://travis-ci.org/jti/laravelfilter
-[link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/jti
-[link-contributors]: ../../contributors
+
+
